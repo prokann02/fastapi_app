@@ -13,13 +13,13 @@ logging = set_logging()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await delete_tables()
-    logging.info(" Database wac cleaned")
+    logging.info("\t  Database wac cleaned")
 
     await create_tables()
-    logging.info(" Database is ready")
+    logging.info("\t  Database is ready")
 
     yield
-    logging.info(" Turning off")
+    logging.info("\t  Turning off")
 
 
 app = FastAPI(lifespan=lifespan)
