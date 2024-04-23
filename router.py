@@ -1,3 +1,5 @@
+# from __future__ import annotations#
+
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
@@ -24,13 +26,16 @@ async def add_product(
 async def change_product_amount(
         product_id: int,
         new_amount: str,
-) -> Product:
+) -> Product | dict:
     products = await ProductRepository.find_products()
 
-    current_product = next((product for product in products if product.id == product_id), None)
-    current_product = Product(id=current_product.id, name=current_product.name, amount=new_amount)
+    if product_id and new_amount:
+        current_product = next((product for product in products if product.id == product_id), None)
+        if current_product:
+            current_product = Product(id=current_product.id, name=current_product.name, amount=new_amount)
+            return current_product
 
-    return current_product
+    return {'error': 'You wrote not existed id.'}
 
 
 @router.get("")
